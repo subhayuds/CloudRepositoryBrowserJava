@@ -139,7 +139,7 @@ public class DocumentService extends HttpServlet {
 		JSONObject errorJson = new JSONObject();
 		
 		try {
-			if (ServletFileUpload .isMultipartContent(request)) {
+			if (ServletFileUpload.isMultipartContent(request)) {
 				operationType = request.getParameter("OPERATION_TYPE");
 				folderPath = request.getParameter("FOLDER_PATH");
 			} else {
@@ -156,6 +156,33 @@ public class DocumentService extends HttpServlet {
 		}
 		
 		switch(operationType) {
+		case "CREATE_REPO":
+			try {
+				CMISHelper.REPO_NAME = repositorySpec.getString("REPO_NAME");
+				System.err.println("Repository: " + CMISHelper.REPO_NAME);
+				CMISHelper.REPO_PRIVATEKEY = repositorySpec.getString("REPO_KEY");
+				System.err.println("Repository Key: " + CMISHelper.REPO_PRIVATEKEY);
+				
+				cmisHelper.createRepository();
+			} catch (ServiceException | NamingException ex) {
+				System.err.println(ex);
+				errorJson = this.handleException(ex);
+			} catch (Exception ex) {
+				System.err.println(ex);
+				errorJson = this.handleException(ex);
+			}
+			
+			try {
+				jsonObject.put("error", errorJson);
+			} catch (JSONException ex) {
+				System.err.println(ex);
+			}
+			
+			response.setContentType("application/json");
+			response.getWriter().write(jsonObject.toString());
+			
+			break;
+			
 		case "CREATE_FOLDER":
 			try {
 				userData = new JSONObject((request.getParameterValues("userData[]"))[0]);

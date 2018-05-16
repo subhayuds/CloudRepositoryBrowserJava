@@ -239,6 +239,13 @@ public class CMISHelper {
 		}
     }
     
+    /**
+     * 
+     * @throws RepositoryAlreadyExistsException
+     * @throws ServiceException
+     * @throws NamingException
+     * @throws Exception
+     */
     public void createRepository() throws RepositoryAlreadyExistsException, ServiceException, NamingException, Exception {
     	try {
 			RepositoryOptions options = new RepositoryOptions();
